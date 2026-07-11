@@ -25,34 +25,23 @@ const SQUADRONS = [
     description:"Programa de formación para nuevos miembros de FARD Roblox.", logoUrl:"", groupUrl:"", comingSoon:true }
 ];
 
-// Eventos fijos (los ve todo el mundo). El panel admin genera el
-// bloque de texto para que pegues aquí nuevos objetos.
-const EVENTS = [
-  // { date:"2026-08-15", title:"Ejercicio conjunto", desc:"Formación abierta a todos los escuadrones.", image:"" }
-];
+// ---- Eventos: ahora se leen y se publican contra un Google
+// Sheet, a través de un Apps Script desplegado como Web App.
+// Pega aquí la URL que te da Google al desplegar (termina en
+// /exec). Instrucciones completas en GUIA-EVENTOS.md.
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrJv8Gsbztshpk3CtSTuDHavn0pfr2bUfHJWApdf2aPwMtJTQYOI5kpwvxSlzhyB44xQ/exec";
 
 const DISCORD_INVITE = "https://discord.gg/3vuTvaYRAt";
 
-// ---- Admin: usuario en claro (no es un secreto), contraseña
-// nunca en texto plano — se compara por hash SHA-256. Aun así,
-// como el sitio no tiene servidor, esto es un candado simbólico:
-// cualquiera puede leer el hash en el código fuente y, con
-// suficiente esfuerzo, intentar romperlo. No protege nada real.
-const ADMIN_USER = "TASKFORCE0102";
-const ADMIN_PASS_HASH = "23075e4476616bb67e3588e0c20f44ee44fdfe7134d96edacda7879ca64c0132";
-const MAX_LOGIN_ATTEMPTS = 5;
-const LOGIN_LOCKOUT_MS = 30000;
+// El usuario/contraseña de admin YA NO se validan aquí — se
+// validan dentro del Apps Script (código que los visitantes del
+// sitio no pueden ver), que es un lugar más seguro para esa
+// comparación que el JS del navegador.
 
 function escapeHtml(str = "") {
   return str.replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
-}
-
-async function sha256Hex(text) {
-  const buf = new TextEncoder().encode(text);
-  const digest = await crypto.subtle.digest("SHA-256", buf);
-  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 // Convierte texto ya escapado con **negrita** estilo Discord a <strong>.
@@ -285,10 +274,12 @@ function initEvents() {
   const loginForm = document.getElementById("admin-login-form");
   const loginCancel = document.getElementById("admin-login-cancel");
   const loginError = document.getElementById("admin-login-error");
+  const loginSubmitBtn = loginForm.querySelector("button[type=submit]");
   const userInput = document.getElementById("admin-user");
   const passInput = document.getElementById("admin-pass");
 
   const eventForm = document.getElementById("event-form");
+  const eventSubmitBtn = eventForm.querySelector("button[type=submit]");
   const logoutBtn = document.getElementById("admin-logout-btn");
   const formError = document.getElementById("event-form-error");
   const titleInput = document.getElementById("event-title");
@@ -296,50 +287,53 @@ function initEvents() {
   const descInput = document.getElementById("event-desc");
   const boldBtn = document.getElementById("event-bold-btn");
   const imageInput = document.getElementById("event-image");
-  const imagePreview = document.getElementById("event-image-preview");
-  const exportBox = document.getElementById("event-export");
-  const exportCode = document.getElementById("event-export-code");
-  const exportCopy = document.getElementById("event-export-copy");
 
-  const LOCAL_EVENTS_KEY = "fard_local_events";
-  let loginAttempts = 0;
-  let lockedUntil = 0;
-  let pendingImageDataUrl = "";
-
-  function getLocalEvents() {
-    try { return JSON.parse(localStorage.getItem(LOCAL_EVENTS_KEY) || "[]"); } catch (e) { return []; }
-  }
-  function saveLocalEvent(ev) {
-    const all = getLocalEvents();
-    all.push(ev);
-    try { localStorage.setItem(LOCAL_EVENTS_KEY, JSON.stringify(all)); } catch (e) {}
-  }
+  // Credenciales guardadas SOLO en memoria mientras dura la sesión
+  // del panel admin (no se guardan en disco). Se reenvían en cada
+  // publicación porque la validación real ocurre en el Apps Script.
+  let sessionUser = "";
+  let sessionPass = "";
 
   function showView(view) {
     [eventsView, loginView, panelView].forEach((v) => v.hidden = true);
     view.hidden = false;
   }
 
-  function renderEvents() {
-    const all = [...EVENTS, ...getLocalEvents()].sort((a, b) => (a.date < b.date ? 1 : -1));
-    if (!all.length) {
-      listEl.innerHTML = `<p class="events-empty mono">SIN EVENTOS PROGRAMADOS POR AHORA</p>`;
-      return;
-    }
-    listEl.innerHTML = all.map((ev) => `
+  function eventCardHtml(ev) {
+    return `
       <div class="event-card">
         <span class="ev-date mono">${escapeHtml(ev.date || "")}</span>
         <h4>${escapeHtml(ev.title || "Evento")}</h4>
         <p>${renderEventText(ev.desc || "")}</p>
-        ${ev.image ? `<img src="${ev.image}" alt="${escapeHtml(ev.title || "Evento")}">` : ""}
-      </div>`).join("");
+        ${ev.image ? `<img src="${escapeHtml(ev.image)}" alt="${escapeHtml(ev.title || "Evento")}" loading="lazy">` : ""}
+      </div>`;
+  }
+
+  async function loadEvents() {
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PEGA_AQUI") === 0) {
+      listEl.innerHTML = `<p class="events-empty mono">FALTA CONECTAR APPS_SCRIPT_URL EN site.js</p>`;
+      return;
+    }
+    listEl.innerHTML = `<p class="events-empty mono">CARGANDO EVENTOS…</p>`;
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, { method: "GET" });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Error");
+      if (!data.events.length) {
+        listEl.innerHTML = `<p class="events-empty mono">SIN EVENTOS PROGRAMADOS POR AHORA</p>`;
+        return;
+      }
+      listEl.innerHTML = data.events.map(eventCardHtml).join("");
+    } catch (err) {
+      listEl.innerHTML = `<p class="events-empty mono">NO SE PUDIERON CARGAR LOS EVENTOS. INTENTA MÁS TARDE.</p>`;
+    }
   }
 
   function openModal() {
-    renderEvents();
     showView(eventsView);
     overlay.classList.add("active");
     document.body.classList.add("modal-open");
+    loadEvents();
   }
   function closeModal() {
     overlay.classList.remove("active");
@@ -358,35 +352,22 @@ function initEvents() {
   });
   loginCancel.addEventListener("click", () => showView(eventsView));
 
-  loginForm.addEventListener("submit", async (e) => {
+  // El login real (usuario/contraseña) se valida dentro del Apps
+  // Script al publicar. Aquí solo guardamos lo escrito para
+  // reenviarlo, y confirmamos abriendo el panel — si las
+  // credenciales fueran incorrectas, el error aparece al publicar.
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    loginError.hidden = true;
-
-    if (Date.now() < lockedUntil) {
-      loginError.textContent = "Demasiados intentos. Espera unos segundos e intenta de nuevo.";
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PEGA_AQUI") === 0) {
+      loginError.textContent = "Falta conectar APPS_SCRIPT_URL en site.js.";
       loginError.hidden = false;
       return;
     }
-
-    const user = userInput.value.trim();
-    const pass = passInput.value;
-    const passHash = await sha256Hex(pass);
-
-    if (user === ADMIN_USER && passHash === ADMIN_PASS_HASH) {
-      loginAttempts = 0;
-      loginForm.reset();
-      showView(panelView);
-    } else {
-      loginAttempts++;
-      loginError.textContent = "Usuario o contraseña incorrectos.";
-      loginError.hidden = false;
-      passInput.value = "";
-      if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-        lockedUntil = Date.now() + LOGIN_LOCKOUT_MS;
-        loginAttempts = 0;
-        loginError.textContent = "Demasiados intentos. Espera 30 segundos.";
-      }
-    }
+    sessionUser = userInput.value.trim();
+    sessionPass = passInput.value;
+    loginForm.reset();
+    formError.hidden = true;
+    showView(panelView);
   });
 
   boldBtn.addEventListener("click", () => {
@@ -399,79 +380,60 @@ function initEvents() {
     descInput.selectionEnd = end + 4;
   });
 
-  const MAX_IMAGE_BYTES = 800 * 1024;
-  imageInput.addEventListener("change", () => {
-    formError.hidden = true;
-    pendingImageDataUrl = "";
-    imagePreview.hidden = true;
-    const file = imageInput.files[0];
-    if (!file) return;
-    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-      formError.textContent = "Formato no soportado. Usa PNG, JPG o WEBP.";
-      formError.hidden = false;
-      imageInput.value = "";
-      return;
-    }
-    if (file.size > MAX_IMAGE_BYTES) {
-      formError.textContent = "La imagen pesa más de 800 KB. Usa una más liviana.";
-      formError.hidden = false;
-      imageInput.value = "";
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      pendingImageDataUrl = reader.result;
-      imagePreview.src = pendingImageDataUrl;
-      imagePreview.hidden = false;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  eventForm.addEventListener("submit", (e) => {
+  eventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     formError.hidden = true;
 
     const title = titleInput.value.trim();
     const date = dateInput.value;
     const desc = descInput.value.trim();
+    const image = imageInput.value.trim();
     if (!title || !date || !desc) {
       formError.textContent = "Completa título, fecha y descripción.";
       formError.hidden = false;
       return;
     }
+    if (image && !/^https?:\/\//i.test(image)) {
+      formError.textContent = "El link de imagen debe empezar con http:// o https://";
+      formError.hidden = false;
+      return;
+    }
 
-    const ev = { date, title, desc, image: pendingImageDataUrl || "" };
-    saveLocalEvent(ev);
-
-    const codeLines = [
-      "  { date:\"" + date + "\", title:" + JSON.stringify(title) + ", desc:" + JSON.stringify(desc) + ",",
-      "    image:" + (ev.image ? "\"" + ev.image.slice(0, 60) + "...\" /* pega el data URL completo desde tu navegador */" : "\"\"") + " },"
-    ];
-    exportCode.value = codeLines.join("\n");
-    exportBox.hidden = false;
-
-    eventForm.reset();
-    imagePreview.hidden = true;
-    pendingImageDataUrl = "";
-    toast("Evento guardado en este navegador.");
-  });
-
-  exportCopy.addEventListener("click", async () => {
+    eventSubmitBtn.disabled = true;
+    eventSubmitBtn.textContent = "Publicando…";
     try {
-      await navigator.clipboard.writeText(exportCode.value);
-      toast("Código copiado.");
-    } catch (e) {
-      exportCode.select();
-      toast("Selecciona y copia manualmente (Ctrl/Cmd+C).");
+      // Content-Type text/plain evita el preflight CORS que Apps
+      // Script no maneja; el propio script parsea el JSON del body.
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ user: sessionUser, pass: sessionPass, date, title, desc, image })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        formError.textContent = data.error || "No se pudo publicar el evento.";
+        formError.hidden = false;
+        return;
+      }
+      eventForm.reset();
+      toast("Evento publicado para todos.");
+      showView(eventsView);
+      loadEvents();
+    } catch (err) {
+      formError.textContent = "Error de conexión. Intenta de nuevo.";
+      formError.hidden = false;
+    } finally {
+      eventSubmitBtn.disabled = false;
+      eventSubmitBtn.textContent = "Publicar";
     }
   });
 
   logoutBtn.addEventListener("click", () => {
-    exportBox.hidden = true;
+    sessionUser = "";
+    sessionPass = "";
     eventForm.reset();
-    imagePreview.hidden = true;
+    formError.hidden = true;
     showView(eventsView);
-    renderEvents();
   });
 }
 
