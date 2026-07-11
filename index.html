@@ -1,0 +1,326 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<header class="hud-bar">
+  <div class="hud-brand">
+    <div class="roundel" aria-hidden="true"></div>
+    <div class="name">FARD ROBLOX<span>ESCUADRILLA VIRTUAL · RD</span></div>
+  </div>
+  <nav class="hud-nav">
+    <a href="#inicio">Inicio</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#escuadrones">Escuadrones</a>
+    <a href="#galeria">Galería</a>
+    <a href="#enlaces">Enlaces</a>
+    <a href="#" data-goto-page="1">Otros</a>
+  </nav>
+</header>
+
+<div class="pager">
+<div class="pager-page is-active" data-page="0">
+
+<section id="inicio" class="hero">
+  <div class="radar-wrap" aria-hidden="true">
+    <div class="radar-ring"></div>
+    <div class="radar-ring r2"></div>
+    <div class="radar-ring r3"></div>
+    <div class="radar-ring r4"></div>
+    <div class="radar-sweep"></div>
+  </div>
+
+  <div class="hero-content">
+    <p class="eyebrow">FUERZA AÉREA DOMINICANA ROBLOXIANA</p>
+    <h1>Guardianes de<br>nuestro <span class="accent">cielo</span> soberano</h1>
+    <p class="hero-sub">Comunidad de roleplay aeronáutico en Roblox. Entrenamiento, formaciones y operaciones aéreas con la disciplina de una escuadrilla real.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#escuadrones">Elige tu escuadrón</a>
+      <a class="btn btn-ghost" href="#nosotros">Conócenos</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="n">500+</div><div class="l">Miembros</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">Plataformas</div></div>
+    <div class="stat"><div class="n">24/7</div><div class="l">Operativa</div></div>
+  </div>
+
+  <div class="scroll-cue"><span>DESPLAZAR</span><div class="line"></div></div>
+</section>
+
+<section id="nosotros">
+  <div class="section-head">
+    <span class="tag mono">01 · BRIEFING</span>
+    <h2>Sobre nosotros</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cards">
+    <div class="card reveal">
+      <span class="num mono">A-01</span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 16l7-2 3-7 2 1-2 6 7 2v2l-7-1-2 5-2-1 1-5-7 1z"/></svg>
+      <h3>Roleplay realista</h3>
+      <p>Vive el roleplay más auténtico de la Fuerza Aérea Dominicana en Roblox, con procedimientos y jerarquía inspirados en la aviación real.</p>
+    </div>
+    <div class="card reveal">
+      <span class="num mono">A-02</span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      <h3>Comunidad activa</h3>
+      <p>Súmate a una comunidad creciente de pilotos, controladores y personal de tierra siempre lista para volar.</p>
+    </div>
+    <div class="card reveal">
+      <span class="num mono">A-03</span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11l18-7-7 18-3-7-8-4z"/></svg>
+      <h3>Misiones emocionantes</h3>
+      <p>Participa en misiones, entrenamientos y operaciones aéreas coordinadas junto al resto de la escuadrilla.</p>
+    </div>
+  </div>
+</section>
+
+<section id="escuadrones">
+  <div class="section-head">
+    <span class="tag mono">02 · ORDEN DE BATALLA</span>
+    <h2>Escuadrones</h2>
+    <div class="rule"></div>
+  </div>
+  <p class="section-lead">Cada escuadrón tiene su propio historial, galería y publicaciones, gestionadas por sus líderes. Elige uno y solicita tu ingreso; un líder revisará tu solicitud.</p>
+
+  <div id="squadrons-grid" class="squad-grid">
+    <div class="empty-note mono">CARGANDO ESCUADRONES…</div>
+  </div>
+
+  <div class="groups-block">
+    <h3 class="groups-title mono">GRUPOS DE ROBLOX POR ESCUADRÓN</h3>
+    <div id="squadron-groups" class="groups-list"></div>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="section-head">
+    <span class="tag mono">03 · REGISTRO FOTOGRÁFICO</span>
+    <h2>Galería</h2>
+    <div class="rule"></div>
+  </div>
+  <div class="gallery">
+    <div class="frame reveal"><img src="https://i.ibb.co/jvrnnPkL/fard-super-tucano-pareja.jpg" alt="Pareja de aviones de entrenamiento FARD en pista" loading="lazy"><span class="tag-corner">IMG_13</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/tMXGmTtw/fard-formacion-comando.jpg" alt="Formación del Comando de Fuerzas Especiales" loading="lazy"><span class="tag-corner">IMG_06</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/27Tkqy9Q/fard-helicoptero-vuelo.jpg" alt="Helicóptero UH-1 en vuelo" loading="lazy"><span class="tag-corner">IMG_07</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/0phKYgjb/fard-izada-bandera.jpg" alt="Izada de la bandera dominicana" loading="lazy"><span class="tag-corner">IMG_08</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/KzrSF6YS/fard-helicoptero-helipuerto.jpg" alt="Helicóptero en el helipuerto" loading="lazy"><span class="tag-corner">IMG_09</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/FbWVGSGm/fard-jets-pista.jpg" alt="Aviones de entrenamiento en pista" loading="lazy"><span class="tag-corner">IMG_10</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/3md6xktc/fard-torre-vigilancia.jpg" alt="Torre de vigilancia" loading="lazy"><span class="tag-corner">IMG_11</span></div>
+    <div class="frame reveal"><img src="https://i.ibb.co/6VpmjTT/fard-piloto-avion.jpg" alt="Piloto junto a su avión" loading="lazy"><span class="tag-corner">IMG_12</span></div>
+    <div class="frame reveal"><img src="https://johsua1233354.github.io/Fuerza-aerea-dominicana-robloxiana/img/fard2.webp" alt="Formación FARD Roblox 1" loading="lazy"><span class="tag-corner">IMG_02</span></div>
+    <div class="frame reveal"><img src="https://johsua1233354.github.io/Fuerza-aerea-dominicana-robloxiana/img/fard3.webp" alt="Formación FARD Roblox 2" loading="lazy"><span class="tag-corner">IMG_03</span></div>
+    <div class="frame reveal"><img src="https://johsua1233354.github.io/Fuerza-aerea-dominicana-robloxiana/img/fard4.webp" alt="Formación FARD Roblox 3" loading="lazy"><span class="tag-corner">IMG_04</span></div>
+    <div class="frame reveal"><img src="https://johsua1233354.github.io/Fuerza-aerea-dominicana-robloxiana/img/fard5.webp" alt="Formación FARD Roblox 4" loading="lazy"><span class="tag-corner">IMG_05</span></div>
+  </div>
+</section>
+
+<section id="enlaces">
+  <div class="section-head">
+    <span class="tag mono">04 · CANALES</span>
+    <h2>Únete a nosotros</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="join-grid">
+    <a class="join-card reveal" href="https://discord.gg/3vuTvaYRAt" target="_blank" rel="noopener noreferrer">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 5.4A17.5 17.5 0 0 0 15.8 4l-.3.6a13 13 0 0 1 3.7 1.4 15 15 0 0 0-14.4 0 13 13 0 0 1 3.7-1.4L8.2 4A17.5 17.5 0 0 0 3.7 5.4C1.2 9.1.5 12.7.8 16.3a17.6 17.6 0 0 0 5.3 2.7l.7-1.1a11 11 0 0 1-1.8-.9c.2-.1.3-.2.5-.3a12.6 12.6 0 0 0 10.9 0l.5.3a11 11 0 0 1-1.8.9l.7 1.1a17.6 17.6 0 0 0 5.3-2.7c.4-4.2-.7-7.8-2.8-10.9ZM9 14c-.8 0-1.5-.8-1.5-1.7S8.1 10.5 9 10.5s1.5.8 1.5 1.8S9.9 14 9 14Zm6 0c-.8 0-1.5-.8-1.5-1.7s.7-1.8 1.5-1.8 1.5.8 1.5 1.8S15.9 14 15 14Z"/></svg>
+      <div>
+        <div class="t">Discord</div>
+        <div class="d">Únete a nuestro servidor oficial</div>
+      </div>
+      <span class="arrow mono">→</span>
+    </a>
+
+    <a class="join-card reveal" href="https://www.tiktok.com/@fard_roblox1" target="_blank" rel="noopener noreferrer">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8a4.3 4.3 0 0 1-3-3.8h-3v13.2a2.6 2.6 0 1 1-1.9-2.5V9.5a5.8 5.8 0 1 0 5 5.7V9.1a7.3 7.3 0 0 0 4.2 1.3V7.2a4.3 4.3 0 0 1-1.3-1.4Z"/></svg>
+      <div>
+        <div class="t">TikTok</div>
+        <div class="d">Síguenos para clips y novedades</div>
+      </div>
+      <span class="arrow mono">→</span>
+    </a>
+
+    <a class="join-card reveal" href="https://www.roblox.com/share/g/14381063" target="_blank" rel="noopener noreferrer">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M8 8h8v8H8z"/></svg>
+      <div>
+        <div class="t">Grupo de Roblox</div>
+        <div class="d">Únete al grupo oficial</div>
+      </div>
+      <span class="arrow mono">→</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 FARD ROBLOX — FUERZA AÉREA DOMINICANA ROBLOXIANA — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
+</footer>
+
+</div><!-- /pager-page 0 -->
+
+<div class="pager-page" data-page="1">
+
+  <section class="page-head">
+    <div class="section-head">
+      <span class="tag mono">05 · INFORMACIÓN ADICIONAL</span>
+      <h2>Otros</h2>
+      <div class="rule"></div>
+    </div>
+    <p class="section-lead">Aquí puedes agregar cualquier información extra que no encaje en las otras secciones: reglamento, preguntas frecuentes, eventos, recursos, etc.</p>
+  </section>
+
+  <!-- ============================================================
+       Apartado editable. Copia un bloque ".other-card" para agregar
+       otro tema, o edita el texto de los que ya están.
+       ============================================================ -->
+  <section id="otros-contenido">
+    <div class="other-grid">
+
+      <div class="other-card reveal">
+        <h3>Reglamento</h3>
+        <p>Escribe aquí las reglas generales de la comunidad, de roleplay, o de convivencia dentro del grupo de Roblox y Discord.</p>
+      </div>
+
+      <div class="other-card reveal">
+        <h3>Preguntas frecuentes</h3>
+        <p>Escribe aquí las dudas más comunes: cómo unirse, requisitos de edad, cómo ascender de rango, etc.</p>
+      </div>
+
+      <button type="button" id="eventos-card" class="other-card reveal other-card-button">
+        <h3>Eventos</h3>
+        <p>Próximos eventos, entrenamientos y actividades programadas de la comunidad. Toca para ver el calendario.</p>
+        <span class="other-card-cta mono">Ver eventos →</span>
+      </button>
+
+    </div>
+  </section>
+
+  <section id="descargo" class="disclaimer-section">
+    <div class="section-head">
+      <span class="tag mono">06 · AVISO LEGAL</span>
+      <h2>Descargo de responsabilidad</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="disclaimer-box reveal">
+      <p>Esta página web es un proyecto independiente de carácter recreativo, educativo y de simulación. No constituye un sitio oficial de la Fuerza Aérea de República Dominicana (FARD), del Ministerio de Defensa (MIDE), ni de ninguna otra institución del Estado dominicano.</p>
+      <p>Todo el contenido —nombres, rangos, insignias, imágenes, documentos, diseños y demás elementos— tiene como único propósito representar, de manera ficticia y/o recreativa, una organización inspirada en la Fuerza Aérea Dominicana, con fines de entretenimiento, aprendizaje y simulación.</p>
+      <p>Esta plataforma no mantiene afiliación, patrocinio, autorización, respaldo ni relación oficial alguna con la Fuerza Aérea de República Dominicana, el Ministerio de Defensa o cualquier otra entidad gubernamental.</p>
+      <p>Ninguna información publicada aquí debe interpretarse como comunicación oficial, orden, reglamento, convocatoria, procedimiento administrativo o información institucional emitida por la Fuerza Aérea de República Dominicana o por el Estado dominicano.</p>
+      <p>Las marcas, nombres, escudos, emblemas o cualquier otro elemento que pudiera pertenecer a terceros siguen siendo propiedad de sus respectivos titulares, y se utilizan únicamente con fines de identificación, referencia histórica, educativa o de simulación, cuando corresponda.</p>
+      <p>Los administradores de esta plataforma se reservan el derecho de modificar, actualizar o eliminar cualquier contenido sin previo aviso.</p>
+      <p>Al acceder y utilizar este sitio, el usuario reconoce y acepta que está interactuando con una comunidad ficticia e independiente, sin carácter oficial ni representación legal de ninguna institución pública de la República Dominicana.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 FARD ROBLOX — FUERZA AÉREA DOMINICANA ROBLOXIANA — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
+  </footer>
+
+</div><!-- /pager-page 1 -->
+
+</div><!-- /pager -->
+
+<div class="pager-dots" role="tablist" aria-label="Páginas del sitio">
+  <button class="dot active" data-page="0" aria-label="Ir a la página 1"></button>
+  <button class="dot" data-page="1" aria-label="Ir a la página 2"></button>
+</div>
+
+<button id="easter-plane" class="easter-plane" aria-label="Sorpresa"></button>
+
+<div id="lightbox" class="lightbox-overlay">
+  <button class="lightbox-close" aria-label="Cerrar imagen">✕</button>
+  <button class="lightbox-nav lightbox-prev" aria-label="Imagen anterior">‹</button>
+  <img class="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" aria-label="Imagen siguiente">›</button>
+  <div class="lightbox-counter mono"></div>
+  <div class="lightbox-hint mono">Doble clic / doble toque o rueda del mouse para zoom</div>
+</div>
+
+<!-- ============================================================
+     MODAL DE EVENTOS
+     Un solo modal con dos vistas internas: lista de eventos (todos
+     la ven) y panel de admin (solo tras iniciar sesión). No hay
+     backend: el admin agrega un evento, el sitio lo guarda en SU
+     propio navegador (localStorage) para que pueda revisarlo, y le
+     entrega un bloque de código para pegar en site.js. Solo lo que
+     está pegado en site.js y subido a GitHub lo ven los demás.
+     ============================================================ -->
+<div id="events-modal" class="modal-overlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="events-modal-title">
+    <button type="button" class="modal-close" id="events-modal-close" aria-label="Cerrar">✕</button>
+
+    <div id="events-view" class="modal-view">
+      <span class="tag mono modal-tag">EVENTOS</span>
+      <h2 id="events-modal-title">Calendario de actividades</h2>
+      <div id="events-list" class="events-list"></div>
+      <button type="button" id="admin-open-btn" class="btn btn-ghost btn-small admin-open-btn">Acceso admin</button>
+    </div>
+
+    <div id="admin-login-view" class="modal-view" hidden>
+      <span class="tag mono modal-tag">ACCESO RESTRINGIDO</span>
+      <h2>Iniciar sesión</h2>
+      <p class="modal-note">Este acceso es un candado simbólico, no una autenticación real: el sitio es estático y no tiene servidor. No lo uses para proteger nada sensible.</p>
+      <form id="admin-login-form" class="admin-form">
+        <label class="field">
+          <span>Usuario</span>
+          <input type="text" id="admin-user" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>Contraseña</span>
+          <input type="password" id="admin-pass" autocomplete="current-password" required>
+        </label>
+        <p id="admin-login-error" class="form-error" hidden></p>
+        <div class="admin-form-actions">
+          <button type="button" id="admin-login-cancel" class="btn btn-ghost btn-small">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-small">Entrar</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="admin-panel-view" class="modal-view" hidden>
+      <span class="tag mono modal-tag">PANEL ADMIN</span>
+      <h2>Nuevo evento</h2>
+      <form id="event-form" class="admin-form">
+        <label class="field">
+          <span>Título</span>
+          <input type="text" id="event-title" maxlength="80" required>
+        </label>
+        <label class="field">
+          <span>Fecha</span>
+          <input type="date" id="event-date" required>
+        </label>
+        <label class="field">
+          <span>Descripción</span>
+          <div class="bold-toolbar">
+            <button type="button" id="event-bold-btn" class="bold-btn mono" title="Negrita (selecciona texto primero)">N</button>
+            <span class="bold-hint mono">selecciona texto y dale a N, o escribe **así**</span>
+          </div>
+          <textarea id="event-desc" rows="4" maxlength="600" required></textarea>
+        </label>
+        <label class="field">
+          <span>Imagen (opcional, máx. 800 KB)</span>
+          <input type="file" id="event-image" accept="image/png,image/jpeg,image/webp">
+          <img id="event-image-preview" class="event-image-preview" hidden alt="Vista previa">
+        </label>
+        <p id="event-form-error" class="form-error" hidden></p>
+        <div class="admin-form-actions">
+          <button type="button" id="admin-logout-btn" class="btn btn-ghost btn-small">Cerrar sesión</button>
+          <button type="submit" class="btn btn-primary btn-small">Publicar</button>
+        </div>
+      </form>
+
+      <div id="event-export" class="event-export" hidden>
+        <p class="modal-note">Evento guardado en este navegador. Para que TODOS lo vean, copia este bloque y pégalo dentro del arreglo <code>EVENTS</code> en <code>assets/site.js</code>, luego sube el archivo a GitHub.</p>
+        <textarea id="event-export-code" class="export-code mono" readonly rows="8"></textarea>
+        <button type="button" id="event-export-copy" class="btn btn-ghost btn-small">Copiar código</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/site.js"></script>
