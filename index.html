@@ -264,7 +264,7 @@
     <div id="admin-login-view" class="modal-view" hidden>
       <span class="tag mono modal-tag">ACCESO RESTRINGIDO</span>
       <h2>Iniciar sesión</h2>
-      <p class="modal-note">Este acceso es un candado simbólico, no una autenticación real: el sitio es estático y no tiene servidor. No lo uses para proteger nada sensible.</p>
+      <p class="modal-note">Tu usuario y contraseña se verifican del lado del servidor (Apps Script) al momento de publicar, no aquí en el navegador.</p>
       <form id="admin-login-form" class="admin-form">
         <label class="field">
           <span>Usuario</span>
@@ -277,7 +277,7 @@
         <p id="admin-login-error" class="form-error" hidden></p>
         <div class="admin-form-actions">
           <button type="button" id="admin-login-cancel" class="btn btn-ghost btn-small">Cancelar</button>
-          <button type="submit" class="btn btn-primary btn-small">Entrar</button>
+          <button type="submit" class="btn btn-primary btn-small">Continuar</button>
         </div>
       </form>
     </div>
@@ -285,6 +285,7 @@
     <div id="admin-panel-view" class="modal-view" hidden>
       <span class="tag mono modal-tag">PANEL ADMIN</span>
       <h2>Nuevo evento</h2>
+      <p class="modal-note">Al publicar, el evento se guarda en el Google Sheet y aparece de inmediato para todos los visitantes.</p>
       <form id="event-form" class="admin-form">
         <label class="field">
           <span>Título</span>
@@ -303,9 +304,8 @@
           <textarea id="event-desc" rows="4" maxlength="600" required></textarea>
         </label>
         <label class="field">
-          <span>Imagen (opcional, máx. 800 KB)</span>
-          <input type="file" id="event-image" accept="image/png,image/jpeg,image/webp">
-          <img id="event-image-preview" class="event-image-preview" hidden alt="Vista previa">
+          <span>Imagen (opcional — pega un link, ej. de imgur)</span>
+          <input type="url" id="event-image" placeholder="https://...">
         </label>
         <p id="event-form-error" class="form-error" hidden></p>
         <div class="admin-form-actions">
@@ -313,12 +313,6 @@
           <button type="submit" class="btn btn-primary btn-small">Publicar</button>
         </div>
       </form>
-
-      <div id="event-export" class="event-export" hidden>
-        <p class="modal-note">Evento guardado en este navegador. Para que TODOS lo vean, copia este bloque y pégalo dentro del arreglo <code>EVENTS</code> en <code>assets/site.js</code>, luego sube el archivo a GitHub.</p>
-        <textarea id="event-export-code" class="export-code mono" readonly rows="8"></textarea>
-        <button type="button" id="event-export-copy" class="btn btn-ghost btn-small">Copiar código</button>
-      </div>
     </div>
   </div>
 </div>
