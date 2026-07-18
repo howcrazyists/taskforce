@@ -6,9 +6,14 @@
 <div class="grid-overlay" aria-hidden="true"></div>
 
 <header class="hud-bar">
-  <div class="hud-brand">
-    <div class="roundel" aria-hidden="true"></div>
-    <div class="name">FARD ROBLOX<span>ESCUADRILLA VIRTUAL · RD</span></div>
+  <div class="hud-left">
+    <button id="sidebar-open-btn" class="hamburger-btn" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="hud-brand">
+      <div class="roundel" aria-hidden="true"></div>
+      <div class="name">FARD ROBLOX<span>ESCUADRILLA VIRTUAL · RD</span></div>
+    </div>
   </div>
   <nav class="hud-nav">
     <a href="#inicio">Inicio</a>
@@ -33,7 +38,7 @@
   </div>
 
   <div class="hero-content">
-    <p class="eyebrow">FUERZA AÉREA DOMINICANA ROBLOXIANA</p>
+    <p class="eyebrow">FARD ROBLOX</p>
     <h1>Guardianes de<br>nuestro <span class="accent">cielo</span> soberano</h1>
     <p class="hero-sub">Comunidad de roleplay aeronáutico en Roblox. Entrenamiento, formaciones y operaciones aéreas con la disciplina de una escuadrilla real.</p>
     <div class="hero-ctas">
@@ -63,7 +68,7 @@
       <span class="num mono">A-01</span>
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 16l7-2 3-7 2 1-2 6 7 2v2l-7-1-2 5-2-1 1-5-7 1z"/></svg>
       <h3>Roleplay realista</h3>
-      <p>Vive el roleplay más auténtico de la Fuerza Aérea Dominicana en Roblox, con procedimientos y jerarquía inspirados en la aviación real.</p>
+      <p>Vive el roleplay más auténtico de FARD ROBLOX, con procedimientos y jerarquía inspirados en la aviación militar real.</p>
     </div>
     <div class="card reveal">
       <span class="num mono">A-02</span>
@@ -158,7 +163,7 @@
 </section>
 
 <footer>
-  <p>© 2026 FARD ROBLOX — FUERZA AÉREA DOMINICANA ROBLOXIANA — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
+  <p>© 2026 FARD ROBLOX — COMUNIDAD DE ROLEPLAY AERONÁUTICO — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
 </footer>
 
 </div><!-- /pager-page 0 -->
@@ -218,7 +223,7 @@
   </section>
 
   <footer>
-    <p>© 2026 FARD ROBLOX — FUERZA AÉREA DOMINICANA ROBLOXIANA — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
+    <p>© 2026 FARD ROBLOX — COMUNIDAD DE ROLEPLAY AERONÁUTICO — TODOS LOS DERECHOS RESERVADOS · COMUNIDAD NO OFICIAL DE ROLEPLAY EN ROBLOX</p>
   </footer>
 
 </div><!-- /pager-page 1 -->
@@ -231,6 +236,83 @@
 </div>
 
 <button id="easter-plane" class="easter-plane" aria-label="Sorpresa"></button>
+
+<!-- ============================================================
+     SIDEBAR — menú deslizante con accesos rápidos a cada sección
+     y al Manual de Instrucciones (protegido con contraseña).
+     ============================================================ -->
+<div id="sidebar-overlay" class="sidebar-overlay">
+  <aside class="sidebar-panel">
+    <div class="sidebar-head">
+      <span class="tag mono">EXPLORAR</span>
+      <button type="button" id="sidebar-close-btn" class="modal-close" aria-label="Cerrar menú">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#inicio" class="sidebar-link" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11l18-7-7 18-3-7-8-4z"/></svg>
+        <span>Inicio</span>
+      </a>
+      <a href="#nosotros" class="sidebar-link" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+        <span>Nosotros</span>
+      </a>
+      <a href="#escuadrones" class="sidebar-link" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M8 8h8v8H8z"/></svg>
+        <span>Escuadrones</span>
+      </a>
+      <a href="#galeria" class="sidebar-link" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-9 9"/></svg>
+        <span>Galería</span>
+      </a>
+      <a href="#enlaces" class="sidebar-link" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+        <span>Enlaces</span>
+      </a>
+      <a href="#" class="sidebar-link" data-goto-page="1" data-close-sidebar>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Otros</span>
+      </a>
+      <button type="button" id="sidebar-manual-btn" class="sidebar-link sidebar-link-protected">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 6.5C10.5 5 8 4 4 4v15c4 0 6.5 1 8 2.5"/><path d="M12 6.5C13.5 5 16 4 20 4v15c-4 0-6.5 1-8 2.5"/></svg>
+        <span>Manual de instrucciones para oficiales</span>
+        <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      </button>
+    </nav>
+  </aside>
+</div>
+
+<!-- ============================================================
+     MODAL DEL MANUAL — protegido solo con contraseña (sin usuario).
+     ============================================================ -->
+<div id="manual-modal" class="modal-overlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="manual-modal-title">
+    <button type="button" class="modal-close" id="manual-modal-close" aria-label="Cerrar">✕</button>
+
+    <div id="manual-login-view" class="modal-view">
+      <span class="tag mono modal-tag">ACCESO RESTRINGIDO</span>
+      <h2 id="manual-modal-title">Manual de instrucciones</h2>
+      <p class="modal-note">Documento de distribución pública de la FARD, usado aquí como referencia para el roleplay. La contraseña se verifica del lado del servidor.</p>
+      <form id="manual-login-form" class="admin-form">
+        <label class="field">
+          <span>Contraseña</span>
+          <input type="password" id="manual-pass" autocomplete="current-password" required>
+        </label>
+        <p id="manual-login-error" class="form-error" hidden></p>
+        <div class="admin-form-actions">
+          <button type="button" id="manual-login-cancel" class="btn btn-ghost btn-small">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-small">Entrar</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="manual-unlocked-view" class="modal-view" hidden>
+      <span class="tag mono modal-tag">ACCESO CONCEDIDO</span>
+      <h2>Manual de instrucciones</h2>
+      <p class="modal-note">Manual de Orden Cerrado y Ceremonias Militares — FARD.</p>
+      <a id="manual-open-link" class="btn btn-primary" href="docs/manual-ceremonias.pdf" target="_blank" rel="noopener noreferrer">Abrir manual (PDF)</a>
+    </div>
+  </div>
+</div>
 
 <div id="lightbox" class="lightbox-overlay">
   <button class="lightbox-close" aria-label="Cerrar imagen">✕</button>
@@ -257,6 +339,10 @@
     <div id="events-view" class="modal-view">
       <span class="tag mono modal-tag">EVENTOS</span>
       <h2 id="events-modal-title">Calendario de actividades</h2>
+      <div id="admin-toolbar" class="admin-toolbar" hidden>
+        <button type="button" id="admin-add-btn" class="btn btn-ghost btn-small">+ Agregar evento</button>
+        <button type="button" id="admin-logout-btn" class="btn btn-ghost btn-small">Cerrar sesión</button>
+      </div>
       <div id="events-list" class="events-list"></div>
       <button type="button" id="admin-open-btn" class="btn btn-ghost btn-small admin-open-btn">Acceso admin</button>
     </div>
@@ -264,12 +350,8 @@
     <div id="admin-login-view" class="modal-view" hidden>
       <span class="tag mono modal-tag">ACCESO RESTRINGIDO</span>
       <h2>Iniciar sesión</h2>
-      <p class="modal-note">Tu usuario y contraseña se verifican del lado del servidor (Apps Script) al momento de publicar, no aquí en el navegador.</p>
+      <p class="modal-note">Tu contraseña se verifica del lado del servidor (Apps Script) al momento de publicar, no aquí en el navegador.</p>
       <form id="admin-login-form" class="admin-form">
-        <label class="field">
-          <span>Usuario</span>
-          <input type="text" id="admin-user" autocomplete="username" required>
-        </label>
         <label class="field">
           <span>Contraseña</span>
           <input type="password" id="admin-pass" autocomplete="current-password" required>
@@ -309,7 +391,7 @@
         </label>
         <p id="event-form-error" class="form-error" hidden></p>
         <div class="admin-form-actions">
-          <button type="button" id="admin-logout-btn" class="btn btn-ghost btn-small">Cerrar sesión</button>
+          <button type="button" id="admin-panel-cancel" class="btn btn-ghost btn-small">Cancelar</button>
           <button type="submit" class="btn btn-primary btn-small">Publicar</button>
         </div>
       </form>

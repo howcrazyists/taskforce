@@ -52,6 +52,7 @@ button{font-family:inherit;cursor:pointer;background:none;border:none;color:inhe
   border-bottom:1px solid var(--line);
 }
 .hud-brand{display:flex;align-items:center;gap:12px;}
+.hud-left{display:flex;align-items:center;}
 .roundel{
   width:34px;height:34px;border-radius:50%;flex-shrink:0;
   background:radial-gradient(circle at 50% 50%, var(--off-white) 0 18%, transparent 19%),
@@ -252,16 +253,40 @@ footer p{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--steel
 }
 .field input:focus,.field textarea:focus{border-color:var(--brass-dim);}
 .field textarea{resize:vertical;}
-.field input[type="file"]{font-size:0.8rem;color:var(--steel);}
 .bold-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
 .bold-btn{width:30px;height:30px;border:1px solid var(--line);background:var(--navy-deep);color:var(--off-white);font-weight:700;border-radius:var(--radius);}
 .bold-btn:hover{border-color:var(--brass);color:var(--brass);}
 .bold-hint{font-size:9.5px;color:var(--steel-dim);}
-.event-image-preview{margin-top:8px;max-height:140px;border:1px solid var(--line);object-fit:cover;}
 .admin-form-actions{display:flex;gap:10px;justify-content:flex-end;}
+.admin-form-actions .btn:disabled{opacity:0.6;}
 .form-error{font-size:0.82rem;color:var(--red-status);background:rgba(194,59,51,0.1);border:1px solid rgba(194,59,51,0.35);padding:8px 12px;border-radius:var(--radius);}
 
-.event-export{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);}
-.export-code{width:100%;background:var(--navy-deep);border:1px solid var(--line);color:var(--brass);font-size:11px;padding:12px;resize:vertical;margin-bottom:10px;}
-
 @media (max-width:640px){.modal-box{padding:26px 18px;}}
+
+/* ============================================================
+   HAMBURGUESA + SIDEBAR
+   ============================================================ */
+.hamburger-btn{width:38px;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid var(--line);border-radius:var(--radius);background:var(--navy-panel);flex-shrink:0;margin-right:14px;}
+.hamburger-btn span{width:18px;height:2px;background:var(--off-white);border-radius:1px;}
+.hamburger-btn:hover{border-color:var(--brass);}
+.hamburger-btn:hover span{background:var(--brass);}
+
+.sidebar-overlay{position:fixed;inset:0;z-index:2300;display:none;background:rgba(5,8,12,0.7);}
+.sidebar-overlay.active{display:block;}
+.sidebar-panel{position:absolute;top:0;left:0;bottom:0;width:min(320px,84vw);background:var(--navy-mid);border-right:1px solid var(--line);box-shadow:20px 0 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;padding:24px 18px;overflow-y:auto;}
+.sidebar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.sidebar-nav{display:flex;flex-direction:column;gap:6px;}
+.sidebar-link{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid transparent;border-radius:var(--radius);color:var(--off-white);font-size:0.92rem;text-align:left;width:100%;transition:background .2s ease,border-color .2s ease;}
+.sidebar-link svg{width:20px;height:20px;flex-shrink:0;color:var(--brass);}
+.sidebar-link:hover{background:var(--navy-panel);border-color:var(--line);}
+.sidebar-link-protected{margin-top:12px;padding-top:16px;border-top:1px solid var(--line);border-radius:0;position:relative;}
+.sidebar-link-protected .lock-icon{margin-left:auto;width:16px;height:16px;color:var(--steel-dim);}
+
+/* ============================================================
+   ADMIN TOOLBAR + BOTÓN ELIMINAR (eventos)
+   ============================================================ */
+.admin-toolbar{display:flex;gap:10px;margin-bottom:16px;}
+.admin-toolbar .btn{flex:1;justify-content:center;}
+.event-delete-btn{margin-top:10px;font-size:10.5px;letter-spacing:0.05em;color:var(--red-status);background:none;border:1px solid rgba(194,59,51,0.4);padding:6px 12px;border-radius:var(--radius);}
+.event-delete-btn:hover{background:rgba(194,59,51,0.12);}
+.event-delete-btn:disabled{opacity:0.6;}

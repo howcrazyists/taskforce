@@ -25,18 +25,17 @@ const SQUADRONS = [
     description:"Programa de formación para nuevos miembros de FARD Roblox.", logoUrl:"", groupUrl:"", comingSoon:true }
 ];
 
-// ---- Eventos: ahora se leen y se publican contra un Google
-// Sheet, a través de un Apps Script desplegado como Web App.
-// Pega aquí la URL que te da Google al desplegar (termina en
-// /exec). Instrucciones completas en GUIA-EVENTOS.md.
+// Eventos y Manual se leen/publican contra un Google Sheet, a
+// través de un Apps Script desplegado como Web App. Pega aquí la
+// URL que te da Google al desplegar (termina en /exec).
+// Instrucciones completas en GUIA-EVENTOS.md.
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrJv8Gsbztshpk3CtSTuDHavn0pfr2bUfHJWApdf2aPwMtJTQYOI5kpwvxSlzhyB44xQ/exec";
 
 const DISCORD_INVITE = "https://discord.gg/3vuTvaYRAt";
+const MANUAL_PDF_URL = "docs/manual-ceremonias.pdf";
 
-// El usuario/contraseña de admin YA NO se validan aquí — se
-// validan dentro del Apps Script (código que los visitantes del
-// sitio no pueden ver), que es un lugar más seguro para esa
-// comparación que el JS del navegador.
+// La contraseña de administrador se valida dentro del Apps Script,
+// no aquí — este archivo no contiene ningún secreto.
 
 function escapeHtml(str = "") {
   return str.replace(/[&<>"']/g, (c) => ({
@@ -269,18 +268,19 @@ function initEvents() {
   const loginView = document.getElementById("admin-login-view");
   const panelView = document.getElementById("admin-panel-view");
   const listEl = document.getElementById("events-list");
+  const adminToolbar = document.getElementById("admin-toolbar");
 
   const adminOpenBtn = document.getElementById("admin-open-btn");
+  const adminAddBtn = document.getElementById("admin-add-btn");
+  const adminLogoutBtn = document.getElementById("admin-logout-btn");
+  const adminPanelCancel = document.getElementById("admin-panel-cancel");
   const loginForm = document.getElementById("admin-login-form");
   const loginCancel = document.getElementById("admin-login-cancel");
   const loginError = document.getElementById("admin-login-error");
-  const loginSubmitBtn = loginForm.querySelector("button[type=submit]");
-  const userInput = document.getElementById("admin-user");
   const passInput = document.getElementById("admin-pass");
 
   const eventForm = document.getElementById("event-form");
   const eventSubmitBtn = eventForm.querySelector("button[type=submit]");
-  const logoutBtn = document.getElementById("admin-logout-btn");
   const formError = document.getElementById("event-form-error");
   const titleInput = document.getElementById("event-title");
   const dateInput = document.getElementById("event-date");
@@ -288,11 +288,12 @@ function initEvents() {
   const boldBtn = document.getElementById("event-bold-btn");
   const imageInput = document.getElementById("event-image");
 
-  // Credenciales guardadas SOLO en memoria mientras dura la sesión
-  // del panel admin (no se guardan en disco). Se reenvían en cada
-  // publicación porque la validación real ocurre en el Apps Script.
-  let sessionUser = "";
+  // La contraseña se guarda SOLO en memoria mientras dura la sesión
+  // del panel admin (nunca en disco); se reenvía en cada acción
+  // porque la validación real ocurre en el Apps Script.
   let sessionPass = "";
+  let isAdmin = false;
+  let currentEvents = [];
 
   function showView(view) {
     [eventsView, loginView, panelView].forEach((v) => v.hidden = true);
@@ -300,17 +301,34 @@ function initEvents() {
   }
 
   function eventCardHtml(ev) {
+    const deleteBtn = isAdmin
+      ? `<button type="button" class="event-delete-btn mono" data-id="${escapeHtml(ev.id || "")}">Eliminar</button>`
+      : "";
     return `
       <div class="event-card">
         <span class="ev-date mono">${escapeHtml(ev.date || "")}</span>
         <h4>${escapeHtml(ev.title || "Evento")}</h4>
         <p>${renderEventText(ev.desc || "")}</p>
         ${ev.image ? `<img src="${escapeHtml(ev.image)}" alt="${escapeHtml(ev.title || "Evento")}" loading="lazy">` : ""}
+        ${deleteBtn}
       </div>`;
   }
 
+  function renderEventsList() {
+    if (!currentEvents.length) {
+      listEl.innerHTML = `<p class="events-empty mono">SIN EVENTOS PROGRAMADOS POR AHORA</p>`;
+      return;
+    }
+    listEl.innerHTML = currentEvents.map(eventCardHtml).join("");
+    if (isAdmin) {
+      listEl.querySelectorAll(".event-delete-btn").forEach((btn) => {
+        btn.addEventListener("click", () => deleteEvent(btn.dataset.id, btn));
+      });
+    }
+  }
+
   async function loadEvents() {
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PEGA_AQUI") === 0) {
+    if (!APPS_SCRIPT_URL) {
       listEl.innerHTML = `<p class="events-empty mono">FALTA CONECTAR APPS_SCRIPT_URL EN site.js</p>`;
       return;
     }
@@ -319,14 +337,45 @@ function initEvents() {
       const res = await fetch(APPS_SCRIPT_URL, { method: "GET" });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || "Error");
-      if (!data.events.length) {
-        listEl.innerHTML = `<p class="events-empty mono">SIN EVENTOS PROGRAMADOS POR AHORA</p>`;
-        return;
-      }
-      listEl.innerHTML = data.events.map(eventCardHtml).join("");
+      currentEvents = data.events;
+      renderEventsList();
     } catch (err) {
       listEl.innerHTML = `<p class="events-empty mono">NO SE PUDIERON CARGAR LOS EVENTOS. INTENTA MÁS TARDE.</p>`;
     }
+  }
+
+  async function deleteEvent(id, btn) {
+    if (!id) return;
+    if (!confirm("¿Eliminar este evento? Esta acción no se puede deshacer.")) return;
+    btn.disabled = true;
+    btn.textContent = "Eliminando…";
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "delete", pass: sessionPass, id })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        toast(data.error || "No se pudo eliminar el evento.");
+        btn.disabled = false;
+        btn.textContent = "Eliminar";
+        return;
+      }
+      toast("Evento eliminado.");
+      loadEvents();
+    } catch (err) {
+      toast("Error de conexión. Intenta de nuevo.");
+      btn.disabled = false;
+      btn.textContent = "Eliminar";
+    }
+  }
+
+  function setAdminMode(on) {
+    isAdmin = on;
+    adminToolbar.hidden = !on;
+    adminOpenBtn.hidden = on;
+    renderEventsList();
   }
 
   function openModal() {
@@ -352,22 +401,54 @@ function initEvents() {
   });
   loginCancel.addEventListener("click", () => showView(eventsView));
 
-  // El login real (usuario/contraseña) se valida dentro del Apps
-  // Script al publicar. Aquí solo guardamos lo escrito para
-  // reenviarlo, y confirmamos abriendo el panel — si las
-  // credenciales fueran incorrectas, el error aparece al publicar.
-  loginForm.addEventListener("submit", (e) => {
+  // Confirma la contraseña contra el Apps Script antes de activar
+  // el modo admin (mostrar botones de eliminar y agregar evento).
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("PEGA_AQUI") === 0) {
+    loginError.hidden = true;
+    if (!APPS_SCRIPT_URL) {
       loginError.textContent = "Falta conectar APPS_SCRIPT_URL en site.js.";
       loginError.hidden = false;
       return;
     }
-    sessionUser = userInput.value.trim();
-    sessionPass = passInput.value;
-    loginForm.reset();
+    const submitBtn = loginForm.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "check", pass: passInput.value })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        loginError.textContent = data.error || "Contraseña incorrecta.";
+        loginError.hidden = false;
+        passInput.value = "";
+        return;
+      }
+      sessionPass = passInput.value;
+      loginForm.reset();
+      setAdminMode(true);
+      showView(eventsView);
+    } catch (err) {
+      loginError.textContent = "Error de conexión. Intenta de nuevo.";
+      loginError.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  adminAddBtn.addEventListener("click", () => {
     formError.hidden = true;
+    eventForm.reset();
     showView(panelView);
+  });
+  adminPanelCancel.addEventListener("click", () => showView(eventsView));
+
+  adminLogoutBtn.addEventListener("click", () => {
+    sessionPass = "";
+    setAdminMode(false);
+    showView(eventsView);
   });
 
   boldBtn.addEventListener("click", () => {
@@ -402,12 +483,10 @@ function initEvents() {
     eventSubmitBtn.disabled = true;
     eventSubmitBtn.textContent = "Publicando…";
     try {
-      // Content-Type text/plain evita el preflight CORS que Apps
-      // Script no maneja; el propio script parsea el JSON del body.
       const res = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ user: sessionUser, pass: sessionPass, date, title, desc, image })
+        body: JSON.stringify({ action: "publish", pass: sessionPass, date, title, desc, image })
       });
       const data = await res.json();
       if (!data.ok) {
@@ -427,13 +506,105 @@ function initEvents() {
       eventSubmitBtn.textContent = "Publicar";
     }
   });
+}
 
-  logoutBtn.addEventListener("click", () => {
-    sessionUser = "";
-    sessionPass = "";
-    eventForm.reset();
-    formError.hidden = true;
-    showView(eventsView);
+// ------------------------------------------------------------
+// SIDEBAR — menú deslizante con accesos a cada sección
+// ------------------------------------------------------------
+function initSidebar() {
+  const openBtn = document.getElementById("sidebar-open-btn");
+  const overlay = document.getElementById("sidebar-overlay");
+  const closeBtn = document.getElementById("sidebar-close-btn");
+  if (!openBtn || !overlay) return;
+
+  function open() {
+    overlay.classList.add("active");
+    document.body.classList.add("modal-open");
+  }
+  function close() {
+    overlay.classList.remove("active");
+    document.body.classList.remove("modal-open");
+  }
+
+  openBtn.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && overlay.classList.contains("active")) close(); });
+  overlay.querySelectorAll("[data-close-sidebar]").forEach((el) => el.addEventListener("click", close));
+
+  const manualBtn = document.getElementById("sidebar-manual-btn");
+  const manualModal = document.getElementById("manual-modal");
+  if (manualBtn && manualModal) {
+    manualBtn.addEventListener("click", () => {
+      close();
+      manualModal.classList.add("active");
+      document.body.classList.add("modal-open");
+    });
+  }
+}
+
+// ------------------------------------------------------------
+// MANUAL DE INSTRUCCIONES — acceso protegido solo con contraseña
+// ------------------------------------------------------------
+function initManual() {
+  const overlay = document.getElementById("manual-modal");
+  if (!overlay) return;
+
+  const closeBtn = document.getElementById("manual-modal-close");
+  const loginView = document.getElementById("manual-login-view");
+  const unlockedView = document.getElementById("manual-unlocked-view");
+  const loginForm = document.getElementById("manual-login-form");
+  const loginCancel = document.getElementById("manual-login-cancel");
+  const loginError = document.getElementById("manual-login-error");
+  const passInput = document.getElementById("manual-pass");
+
+  function close() {
+    overlay.classList.remove("active");
+    document.body.classList.remove("modal-open");
+  }
+  function reset() {
+    loginView.hidden = false;
+    unlockedView.hidden = true;
+    loginError.hidden = true;
+    loginForm.reset();
+  }
+
+  closeBtn.addEventListener("click", () => { close(); reset(); });
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) { close(); reset(); } });
+  loginCancel.addEventListener("click", () => { close(); reset(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && overlay.classList.contains("active")) { close(); reset(); } });
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    if (!APPS_SCRIPT_URL) {
+      loginError.textContent = "Falta conectar APPS_SCRIPT_URL en site.js.";
+      loginError.hidden = false;
+      return;
+    }
+    const submitBtn = loginForm.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "check", pass: passInput.value })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        loginError.textContent = data.error || "Contraseña incorrecta.";
+        loginError.hidden = false;
+        passInput.value = "";
+        return;
+      }
+      loginView.hidden = true;
+      unlockedView.hidden = false;
+    } catch (err) {
+      loginError.textContent = "Error de conexión. Intenta de nuevo.";
+      loginError.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -485,5 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initPager();
   initLightbox();
   initEvents();
+  initSidebar();
+  initManual();
   initEasterEgg();
 });
