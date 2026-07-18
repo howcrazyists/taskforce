@@ -83,6 +83,7 @@ button{font-family:inherit;cursor:pointer;background:none;border:none;color:inhe
 .hero-sub{margin-top:22px;font-size:clamp(1rem,2vw,1.2rem);color:var(--steel);max-width:520px;margin-left:auto;margin-right:auto;}
 .hero-ctas{margin-top:40px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 .btn{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:14px 26px;border-radius:var(--radius);border:1px solid var(--line);display:inline-flex;align-items:center;gap:10px;transition:transform .2s ease, border-color .2s ease, background .2s ease;}
+[hidden]{display:none !important;}
 .btn-primary{background:var(--dr-red);border-color:var(--dr-red);color:var(--off-white);}
 .btn-primary:hover{transform:translateY(-2px);background:#b30e21;}
 .btn-ghost:hover{transform:translateY(-2px);border-color:var(--brass);color:var(--brass);}
